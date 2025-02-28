@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffdde1);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            margin: 30px auto;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            color: #ff4d6d;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        button {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #d43f5e;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        img {
+            width: 220px;
+            margin-top: 20px;
+            border-radius: 10px;
+            animation: float 3s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0); }
+        }
+
+        video {
+            width: 90%;
+            max-width: 600px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            p { font-size: 1.1rem; }
+            button { font-size: 0.9rem; padding: 10px 18px; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            p { font-size: 1rem; }
+            button { font-size: 0.85rem; padding: 8px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas class="confetti"></canvas>
+
+    <div class="container">
+        <h1>🎉 Happy Birthday, Special One! 🎂</h1>
+        <p>Wishing you a day filled with love, joy, and happiness! 💖</p>
+        <button id="surprise-btn">Click for a Surprise 🎁</button>
+        <audio id="bg-music" src="https://www.bensound.com/bensound-music/bensound-birthday.mp3" loop autoplay></audio>
+    </div>
+
+    <div id="surprise" class="hidden">
+        <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjcyd3Z5MHRkc2J2dm8xZTk0bGRoYWxwZ2R4aGNuem5ldXE2bjh5bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YCJ7SGsUH5gsoznIKs/giphy.gif" alt="Birthday Celebration">
+        <p>You're an amazing person! Enjoy your special day with love and laughter! ❤️</p>
+        <button onclick="playVideo()">Watch Your Special Video 🎥</button>
+        <video id="bday-video" class="hidden" controls>
+            <source src="https://cdn.pixabay.com/video/2017/12/09/13289-246909903_large.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <script>
+        document.getElementById("surprise-btn").addEventListener("click", function() {
+            document.getElementById("surprise").classList.remove("hidden");
+        });
+
+        function playVideo() {
+            document.getElementById("bday-video").classList.remove("hidden");
+            document.getElementById("bday-video").play();
+        }
+
+        // Confetti Animation
+        const confettiCanvas = document.querySelector('.confetti');
+        const ctx = confettiCanvas.getContext('2d');
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+
+        let confettiParticles = [];
+
+        function ConfettiParticle() {
+            this.x = Math.random() * confettiCanvas.width;
+            this.y = Math.random() * confettiCanvas.height - confettiCanvas.height;
+            this.size = Math.random() * 10 + 5;
+            this.speed = Math.random() * 3 + 2;
+            this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 100; i++) {
+                confettiParticles.push(new ConfettiParticle());
+            }
+        }
+
+        function drawConfetti() {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            confettiParticles.forEach((p, index) => {
+                p.y += p.speed;
+                if (p.y > confettiCanvas.height) confettiParticles[index] = new ConfettiParticle();
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(drawConfetti);
+        }
+
+        createConfetti();
+        drawConfetti();
+    </script>
+
+</body>
+</html>
